@@ -13,6 +13,8 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 
+		public bool timeTravel;
+
 		[Header("Movement Settings")]
 		public bool analogMovement;
 
@@ -45,6 +47,13 @@ namespace StarterAssets
 		{
 			SprintInput(value.isPressed);
 		}
+
+		public void OnTimeTravel(InputValue value)
+		{
+			TimeTravelInput(value.isPressed);
+		}
+
+
 #else
 	// old input sys if we do decide to have it (most likely wont)...
 #endif
@@ -68,6 +77,11 @@ namespace StarterAssets
 		public void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
+		}
+
+		public void TimeTravelInput(bool newTimeTravelState)
+		{
+			timeTravel = newTimeTravelState;
 		}
 
 #if !UNITY_IOS || !UNITY_ANDROID
