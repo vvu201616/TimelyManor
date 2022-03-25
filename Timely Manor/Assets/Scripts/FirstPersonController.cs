@@ -2,6 +2,7 @@ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
+using UnityEngine.SceneManagement;
 
 namespace StarterAssets
 {
@@ -73,6 +74,10 @@ namespace StarterAssets
 		
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
+
+		// Past and Present scenes
+		public string pastScene, presentScene;
+
 		private void Awake()
 		{
 			// get a reference to our main camera
@@ -98,11 +103,26 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+
+			if (_input.timeTravel)
+				TimeTravel();
 		}
 
 		private void LateUpdate()
 		{
 			CameraRotation();
+		}
+
+		private void TimeTravel()
+		{
+			Scene scene = SceneManager.GetActiveScene();
+			if (scene.name == pastScene)
+			{
+				// TODO scene change needs animation etc
+				SceneManager.LoadScene(presentScene);
+				return;
+			}
+			SceneManager.LoadScene(pastScene);
 		}
 
 		private void GroundedCheck()
