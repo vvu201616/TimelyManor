@@ -71,7 +71,12 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
-		
+
+		//Time Travel
+		private bool hasTravel = false;
+		private float currentXpos;
+
+
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
 
@@ -104,8 +109,8 @@ namespace StarterAssets
 			GroundedCheck();
 			Move();
 
-			if (_input.timeTravel)
-				TimeTravel();
+			//if (_input.timeTravel)
+			//	TimeTravel();
 		}
 
 		private void LateUpdate()
@@ -115,14 +120,21 @@ namespace StarterAssets
 
 		private void TimeTravel()
 		{
-			Scene scene = SceneManager.GetActiveScene();
-			if (scene.name == pastScene)
+			if (hasTravel == true)
 			{
-				// TODO scene change needs animation etc
-				SceneManager.LoadScene(presentScene);
-				return;
+				
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x - 100, 0, 0);
+				Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x);
+				hasTravel = false;
 			}
-			SceneManager.LoadScene(pastScene);
+			else
+			{
+				
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100, 0, 0);
+				Debug.Log("Time Travel Back Initiated + X coordinate is " + gameObject.transform.position.x);
+				hasTravel = true;
+			}
+			_input.timeTravel = false;
 		}
 
 		private void GroundedCheck()
@@ -268,4 +280,7 @@ namespace StarterAssets
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
 	}
+
+
+	
 }

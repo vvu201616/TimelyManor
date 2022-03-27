@@ -43,9 +43,9 @@
                 },
                 {
                     "name": "timeTravel",
-                    "type": "PassThrough",
+                    "type": "Button",
                     "id": "d8df8e21-d454-4266-877e-a6f9423a663d",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -241,7 +241,7 @@
                 },
                 {
                     "name": "",
-                    "id": "3673d432-4403-4e57-a7f7-ecc8e38742cf",
+                    "id": "552bf460-ea69-457f-aec0-86f2d93e8a6c",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
