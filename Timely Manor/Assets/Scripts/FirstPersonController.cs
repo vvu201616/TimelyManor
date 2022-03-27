@@ -1,7 +1,9 @@
 using UnityEngine;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
+using UnityEngine.SceneManagement;
 
 namespace StarterAssets
 {
@@ -70,8 +72,22 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
-		
+
+		//Time Travel
+		private bool hasTravel = false;
+		private float currentXpos;
+		private enum MovementState
+        {
+			Moving,
+			TimeTraveling
+        }
+		private MovementState _movementState;
+
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
+
+
+		// Past and Present scenes
+		public string pastScene, presentScene;
 
 		private void Awake()
 		{
@@ -91,18 +107,58 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+			_movementState = MovementState.Moving;
 		}
 
 		private void Update()
 		{
-			JumpAndGravity();
-			GroundedCheck();
-			Move();
-		}
+			if(_movementState == MovementState.Moving)
+            {
+				JumpAndGravity();
+				GroundedCheck();
+				Move();
+			}
+			
 
+			if (_input.timeTravel)
+            {
+				_movementState = MovementState.TimeTraveling;
+				Debug.Log(_movementState);
+				TimeTravel();
+				StartCoroutine("Pause");
+				
+			}
+			
+		}
+		IEnumerator Pause()
+        {
+			yield return new WaitForSeconds(0.1f);
+			_movementState = MovementState.Moving;
+			Debug.Log(_movementState);
+		}
 		private void LateUpdate()
 		{
 			CameraRotation();
+		}
+
+		private void TimeTravel()
+		{
+			if (hasTravel == true)
+			{
+				
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x - 100, gameObject.transform.position.y, gameObject.transform.position.z);
+				Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x);
+				hasTravel = false;
+			}
+			else
+			{
+				
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100, gameObject.transform.position.y, gameObject.transform.position.z);
+				Debug.Log("Time Travel Back Initiated + X coordinate is " + gameObject.transform.position.x);
+				hasTravel = true;
+			}
+			_input.timeTravel = false;
+			
 		}
 
 		private void GroundedCheck()
@@ -248,4 +304,7 @@ namespace StarterAssets
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
 	}
+
+
+	
 }
