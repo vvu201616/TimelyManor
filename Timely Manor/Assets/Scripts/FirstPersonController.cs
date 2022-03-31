@@ -4,8 +4,11 @@ using System.Collections;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.SceneManagement;
+<<<<<<< HEAD
 using Cinemachine;
 using System;
+=======
+>>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
 
 namespace StarterAssets
 {
@@ -77,6 +80,7 @@ namespace StarterAssets
 
 		//Time Travel
 		private bool hasTravel = false;
+<<<<<<< HEAD
 		private Vector3 oldXpos;
 		public GameObject _followcamera;
 
@@ -95,6 +99,10 @@ namespace StarterAssets
 			Present
         }
 		private TimeState _timeState;
+=======
+		private float currentXpos;
+
+>>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
 
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
@@ -130,6 +138,7 @@ namespace StarterAssets
 
 		private void Update()
 		{
+<<<<<<< HEAD
 			if(_playerState == PlayerState.Moving)
             {
 				JumpAndGravity();
@@ -155,6 +164,14 @@ namespace StarterAssets
 			yield return new WaitForSeconds(0.1f);
 			_playerState = PlayerState.Moving;
 			Debug.Log(_playerState);
+=======
+			JumpAndGravity();
+			GroundedCheck();
+			Move();
+
+			//if (_input.timeTravel)
+			//	TimeTravel();
+>>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
 		}
 
 		private void LateUpdate()
@@ -164,6 +181,7 @@ namespace StarterAssets
 
 		private void TimeTravel()
 		{
+<<<<<<< HEAD
 			
 			oldXpos = gameObject.transform.position;
 			gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100 * (1 + (-2 * Convert.ToInt32(hasTravel))), gameObject.transform.position.y, gameObject.transform.position.z);
@@ -175,6 +193,23 @@ namespace StarterAssets
 			
 			_input.timeTravel = false;
 			
+=======
+			if (hasTravel == true)
+			{
+				
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x - 100, 0, 0);
+				Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x);
+				hasTravel = false;
+			}
+			else
+			{
+				
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100, 0, 0);
+				Debug.Log("Time Travel Back Initiated + X coordinate is " + gameObject.transform.position.x);
+				hasTravel = true;
+			}
+			_input.timeTravel = false;
+>>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
 		}
 
 		private void GroundedCheck()
