@@ -4,6 +4,8 @@ using System.Collections;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.SceneManagement;
+using Cinemachine;
+using System;
 
 namespace StarterAssets
 {
@@ -75,13 +77,24 @@ namespace StarterAssets
 
 		//Time Travel
 		private bool hasTravel = false;
-		private float currentXpos;
-		private enum MovementState
+		private Vector3 oldXpos;
+		public GameObject _followcamera;
+
+		private CinemachineVirtualCamera vcam;
+
+		//State enums
+		private enum PlayerState
         {
 			Moving,
 			TimeTraveling
         }
-		private MovementState _movementState;
+		private PlayerState _playerState;
+		private enum TimeState
+        {
+			Past,
+			Present
+        }
+		private TimeState _timeState;
 
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
@@ -104,15 +117,20 @@ namespace StarterAssets
 			_input = GetComponent<StarterAssetsInputs>();
 			_playerInput = GetComponent<PlayerInput>();
 
+
+			vcam = _followcamera.GetComponent<CinemachineVirtualCamera>();
+
+
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
-			_movementState = MovementState.Moving;
+			_playerState = PlayerState.Moving;
+			_timeState = TimeState.Present;
 		}
 
 		private void Update()
 		{
-			if(_movementState == MovementState.Moving)
+			if(_playerState == PlayerState.Moving)
             {
 				JumpAndGravity();
 				GroundedCheck();
@@ -122,20 +140,23 @@ namespace StarterAssets
 
 			if (_input.timeTravel)
             {
-				_movementState = MovementState.TimeTraveling;
-				Debug.Log(_movementState);
+				vcam.enabled = false;
+				_playerState = PlayerState.TimeTraveling;
+				Debug.Log(_playerState);
 				TimeTravel();
 				StartCoroutine("Pause");
-				
+				vcam.enabled = true;
 			}
 			
 		}
+
 		IEnumerator Pause()
         {
 			yield return new WaitForSeconds(0.1f);
-			_movementState = MovementState.Moving;
-			Debug.Log(_movementState);
+			_playerState = PlayerState.Moving;
+			Debug.Log(_playerState);
 		}
+
 		private void LateUpdate()
 		{
 			CameraRotation();
@@ -143,20 +164,15 @@ namespace StarterAssets
 
 		private void TimeTravel()
 		{
-			if (hasTravel == true)
-			{
-				
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x - 100, gameObject.transform.position.y, gameObject.transform.position.z);
-				Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x);
-				hasTravel = false;
-			}
-			else
-			{
-				
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100, gameObject.transform.position.y, gameObject.transform.position.z);
-				Debug.Log("Time Travel Back Initiated + X coordinate is " + gameObject.transform.position.x);
-				hasTravel = true;
-			}
+			
+			oldXpos = gameObject.transform.position;
+			gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100 * (1 + (-2 * Convert.ToInt32(hasTravel))), gameObject.transform.position.y, gameObject.transform.position.z);
+			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x + "\n " +Convert.ToInt32(hasTravel));
+			vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos * (1 + (-2 * Convert.ToInt32(hasTravel))));
+
+			hasTravel = !hasTravel;
+
+			
 			_input.timeTravel = false;
 			
 		}
