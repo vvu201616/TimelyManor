@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 namespace StarterAssets
 {
@@ -75,7 +76,10 @@ namespace StarterAssets
 
 		//Time Travel
 		private bool hasTravel = false;
-		private float currentXpos;
+		private float teleportXDistance = 100;
+		private Vector3 oldXPos;
+		private CinemachineVirtualCamera vcam;
+		public GameObject followCam;
 		private enum MovementState
         {
 			Moving,
@@ -103,6 +107,7 @@ namespace StarterAssets
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
 			_playerInput = GetComponent<PlayerInput>();
+			vcam = followCam.GetComponent<CinemachineVirtualCamera>();
 
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
@@ -145,15 +150,19 @@ namespace StarterAssets
 		{
 			if (hasTravel == true)
 			{
-				
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x - 100, gameObject.transform.position.y, gameObject.transform.position.z);
+				oldXPos = gameObject.transform.position;
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x - teleportXDistance, gameObject.transform.position.y, gameObject.transform.position.z);
+				//_mainCamera.transform.position = new Vector3(_mainCamera.transform.position.x - teleportXDistance, _mainCamera.transform.position.y, _mainCamera.transform.position.z);
+				vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position - oldXPos);
 				Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x);
 				hasTravel = false;
 			}
 			else
 			{
-				
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100, gameObject.transform.position.y, gameObject.transform.position.z);
+				oldXPos = gameObject.transform.position;
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportXDistance, gameObject.transform.position.y, gameObject.transform.position.z);
+				//_mainCamera.transform.position = new Vector3(_mainCamera.transform.position.x + teleportXDistance, _mainCamera.transform.position.y, _mainCamera.transform.position.z);
+				vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position - oldXPos);
 				Debug.Log("Time Travel Back Initiated + X coordinate is " + gameObject.transform.position.x);
 				hasTravel = true;
 			}
