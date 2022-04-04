@@ -43,13 +43,6 @@
                 },
                 {
                     "name": "timeTravel",
-<<<<<<< HEAD
-                    "type": "PassThrough",
-                    "id": "b85d02c2-2c5e-46f2-ae94-07dc49305cfb",
-=======
-                    "type": "Button",
-                    "id": "d8df8e21-d454-4266-877e-a6f9423a663d",
->>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -235,11 +228,8 @@
                 },
                 {
                     "name": "",
-<<<<<<< HEAD
-                    "id": "e207fbe8-408b-4a16-9319-d7375ff68fff",
-=======
                     "id": "3cc439f8-699b-48f4-b9af-4c65ef0236f9",
->>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
+
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
@@ -250,13 +240,8 @@
                 },
                 {
                     "name": "",
-<<<<<<< HEAD
-                    "id": "87796fb2-03ba-4834-8030-e48a7fcc6f1f",
-                    "path": "<Gamepad>/dpad/up",
-=======
                     "id": "552bf460-ea69-457f-aec0-86f2d93e8a6c",
                     "path": "<Gamepad>/buttonNorth",
->>>>>>> f10496a7b59061922e90f0f4558c1eff816ebf9c
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
