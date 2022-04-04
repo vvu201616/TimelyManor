@@ -102,9 +102,6 @@ namespace StarterAssets
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
 
-		// Past and Present scenes
-		public string pastScene, presentScene;
-
 		private void Awake()
 		{
 			// get a reference to our main camera
