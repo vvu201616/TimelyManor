@@ -79,6 +79,7 @@ namespace StarterAssets
 		private bool hasTravel = false;
 		private Vector3 oldXpos;
 		public GameObject _followcamera;
+		public float teleportDistace;
 
 		private CinemachineVirtualCamera vcam;
 
@@ -166,7 +167,7 @@ namespace StarterAssets
 		{
 			
 			oldXpos = gameObject.transform.position;
-			gameObject.transform.position = new Vector3(gameObject.transform.position.x + 100 * (1 + (-2 * Convert.ToInt32(hasTravel))), gameObject.transform.position.y, gameObject.transform.position.z);
+			gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportDistace * (1 + (-2 * Convert.ToInt32(hasTravel))), gameObject.transform.position.y, gameObject.transform.position.z);
 			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x + "\n " +Convert.ToInt32(hasTravel));
 			vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos * (1 + (-2 * Convert.ToInt32(hasTravel))));
 
