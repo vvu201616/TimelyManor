@@ -4,8 +4,10 @@ using System.Collections;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.SceneManagement;
+
 using Cinemachine;
 using System;
+
 
 namespace StarterAssets
 {
@@ -77,6 +79,7 @@ namespace StarterAssets
 
 		//Time Travel
 		private bool hasTravel = false;
+
 		private Vector3 oldXpos;
 		public GameObject _followcamera;
 		public float teleportDistace;
@@ -99,9 +102,6 @@ namespace StarterAssets
 
 		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
-
-		// Past and Present scenes
-		public string pastScene, presentScene;
 
 		private void Awake()
 		{
@@ -164,8 +164,7 @@ namespace StarterAssets
 		}
 
 		private void TimeTravel()
-		{
-			
+		{ 
 			oldXpos = gameObject.transform.position;
 			gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportDistace * (1 + (-2 * Convert.ToInt32(hasTravel))), gameObject.transform.position.y, gameObject.transform.position.z);
 			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x + "\n " +Convert.ToInt32(hasTravel));
