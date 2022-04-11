@@ -152,10 +152,12 @@ namespace StarterAssets
 			if (_playerState == PlayerState.Interacting)
 			{
 				if (_input.exit)
-				{ 
-					_playerState = PlayerState.Moving;
+				{
+					Debug.Log("Interacted off from E");
 					_mainCamera.GetComponent<CinemachineBrain>().ActiveVirtualCamera.Priority = 1; 
 					followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 10;
+					_playerState = PlayerState.Moving;
+					_input.exit = false;
 				}
 			}
 			
@@ -320,25 +322,35 @@ namespace StarterAssets
 
 		private void OnTriggerStay(Collider col)
 		{
+			
 			if (col.gameObject.tag == "Interact" && _input.interact)
 			{
+				//Debug.Log("Interacted with E");
 				_playerState = PlayerState.Interacting;
 				pressEText.gameObject.SetActive(false);
 				followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 1;
 				col.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 10;
+				_input.interact = false;
 			}
 		}
 
 		private void OnTriggerEnter(Collider other)
 		{
 			if (other.tag == "Interact")
+            {
+				//Debug.Log("Interacted");
 				pressEText.gameObject.SetActive(true);
+            }
+
 		}
 
 		private void OnTriggerExit(Collider other)
 		{
 			if (other.tag == "Interact")
+            {
+				//Debug.Log("Interacted off");
 				pressEText.gameObject.SetActive(false);
+            }
 		}
 
 		private void OnDrawGizmosSelected()
