@@ -43,6 +43,26 @@
                 },
                 {
                     "name": "timeTravel",
+                    "type": "Button",
+                    "id": "1f85ee68-30fb-4515-8cc2-8e0c1b5abbb5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "9688eef3-0310-4f96-8d06-b9342c36fa92",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "33e8f918-23eb-40c0-a6de-96c408cf24dc",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -229,7 +249,6 @@
                 {
                     "name": "",
                     "id": "3cc439f8-699b-48f4-b9af-4c65ef0236f9",
-
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
@@ -246,6 +265,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "timeTravel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "115c2abe-1630-4e85-835c-947109211f09",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b41ef74e-3d18-4745-9ddd-4a3513319e6b",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Exit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

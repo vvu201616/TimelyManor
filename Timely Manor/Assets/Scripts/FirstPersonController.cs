@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.SceneManagement;
-
+using TMPro;
 using Cinemachine;
 using System;
 
@@ -77,20 +77,21 @@ namespace StarterAssets
 
 		private const float _threshold = 0.01f;
 
-		//Time Travel
-		private bool hasTravel = false;
-
 		private Vector3 oldXpos;
-		public GameObject _followcamera;
+		public GameObject followCamera;
 		public float teleportDistace;
 
 		private CinemachineVirtualCamera vcam;
 
-		//State enums
+		// UI elements
+		public TextMeshProUGUI pressEText;
+
+		// State enums
 		private enum PlayerState
         {
 			Moving,
-			TimeTraveling
+			TimeTraveling,
+			Interacting
         }
 		private PlayerState _playerState;
 		private enum TimeState
@@ -119,7 +120,7 @@ namespace StarterAssets
 			_playerInput = GetComponent<PlayerInput>();
 
 
-			vcam = _followcamera.GetComponent<CinemachineVirtualCamera>();
+			vcam = followCamera.GetComponent<CinemachineVirtualCamera>();
 
 
 			// reset our timeouts on start
@@ -131,14 +132,13 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			if(_playerState == PlayerState.Moving)
+			if (_playerState == PlayerState.Moving)
             {
 				JumpAndGravity();
 				GroundedCheck();
 				Move();
 			}
 			
-
 			if (_input.timeTravel)
             {
 				vcam.enabled = false;
@@ -147,6 +147,16 @@ namespace StarterAssets
 				TimeTravel();
 				StartCoroutine("Pause");
 				vcam.enabled = true;
+			}
+
+			if (_playerState == PlayerState.Interacting)
+			{
+				if (_input.exit)
+				{ 
+					_playerState = PlayerState.Moving;
+					_mainCamera.GetComponent<CinemachineBrain>().ActiveVirtualCamera.Priority = 1; 
+					followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 10;
+				}
 			}
 			
 		}
@@ -160,21 +170,20 @@ namespace StarterAssets
 
 		private void LateUpdate()
 		{
-			CameraRotation();
+			if (_playerState == PlayerState.Moving) // TODO doesnt prevent camera movement outside of move state
+			{
+				CameraRotation();
+			}
 		}
 
 		private void TimeTravel()
 		{ 
 			oldXpos = gameObject.transform.position;
-			gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportDistace * (1 + (-2 * Convert.ToInt32(hasTravel))), gameObject.transform.position.y, gameObject.transform.position.z);
-			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x + "\n " +Convert.ToInt32(hasTravel));
-			vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos * (1 + (-2 * Convert.ToInt32(hasTravel))));
+			gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportDistace * (1 + (-2 * Convert.ToInt32(_timeState))), gameObject.transform.position.y, gameObject.transform.position.z);
+			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x + "\n " +Convert.ToInt32(_timeState));
+			vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos * (1 + (-2 * Convert.ToInt32(_timeState))));
 
-			hasTravel = !hasTravel;
-
-			
-			_input.timeTravel = false;
-			
+			_input.timeTravel = false;			
 		}
 
 		private void GroundedCheck()
@@ -306,6 +315,30 @@ namespace StarterAssets
 			if (lfAngle < -360f) lfAngle += 360f;
 			if (lfAngle > 360f) lfAngle -= 360f;
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
+		}
+
+
+		private void OnTriggerStay(Collider col)
+		{
+			if (col.gameObject.tag == "Interact" && _input.interact)
+			{
+				_playerState = PlayerState.Interacting;
+				pressEText.gameObject.SetActive(false);
+				followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 1;
+				col.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 10;
+			}
+		}
+
+		private void OnTriggerEnter(Collider other)
+		{
+			if (other.tag == "Interact")
+				pressEText.gameObject.SetActive(true);
+		}
+
+		private void OnTriggerExit(Collider other)
+		{
+			if (other.tag == "Interact")
+				pressEText.gameObject.SetActive(false);
 		}
 
 		private void OnDrawGizmosSelected()
