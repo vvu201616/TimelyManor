@@ -151,16 +151,36 @@ namespace StarterAssets
 
 			if (_playerState == PlayerState.Interacting)
 			{
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.None;
+
+				if (_input.clickInput)
+                {
+					Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+					RaycastHit hit;
+					if (Physics.Raycast(ray, out hit, 100))
+					{
+						Debug.Log(hit.transform.name);
+
+
+					}
+					_input.clickInput = false;
+                }
+
 				if (_input.exit)
 				{
-					Debug.Log("Interacted off from E");
 					_mainCamera.GetComponent<CinemachineBrain>().ActiveVirtualCamera.Priority = 1; 
 					followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 10;
 					_playerState = PlayerState.Moving;
+
+					Cursor.visible = false;
 					_input.exit = false;
 				}
 			}
-			
+
+
+			_input.clickInput = false;
+
 		}
 
 		IEnumerator Pause()
@@ -327,6 +347,8 @@ namespace StarterAssets
 			{
 				//Debug.Log("Interacted with E");
 				_playerState = PlayerState.Interacting;
+
+
 				pressEText.gameObject.SetActive(false);
 				followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 1;
 				col.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 10;
