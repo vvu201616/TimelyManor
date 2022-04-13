@@ -161,8 +161,7 @@ namespace StarterAssets
 					if (Physics.Raycast(ray, out hit, 100))
 					{
 						Debug.Log(hit.transform.name);
-
-
+						
 					}
 					_input.clickInput = false;
                 }
