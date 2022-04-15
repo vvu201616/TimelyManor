@@ -79,7 +79,7 @@ namespace StarterAssets
 
 		private Vector3 oldXpos;
 		public GameObject followCamera;
-		public float teleportDistace;
+		public float teleportDistace = 100;
 
 		private CinemachineVirtualCamera vcam;
 
@@ -141,12 +141,9 @@ namespace StarterAssets
 			
 			if (_input.timeTravel)
             {
-				vcam.enabled = false;
 				_playerState = PlayerState.TimeTraveling;
-				Debug.Log(_playerState);
 				TimeTravel();
 				StartCoroutine("Pause");
-				vcam.enabled = true;
 			}
 
 			if (_playerState == PlayerState.Interacting)
@@ -161,7 +158,6 @@ namespace StarterAssets
 					if (Physics.Raycast(ray, out hit, 100))
 					{
 						Debug.Log(hit.transform.name);
-						
 					}
 					_input.clickInput = false;
                 }
@@ -186,7 +182,6 @@ namespace StarterAssets
         {
 			yield return new WaitForSeconds(0.1f);
 			_playerState = PlayerState.Moving;
-			Debug.Log(_playerState);
 		}
 
 		private void LateUpdate()
@@ -200,10 +195,21 @@ namespace StarterAssets
 		private void TimeTravel()
 		{ 
 			oldXpos = gameObject.transform.position;
-			gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportDistace * (1 + (-2 * Convert.ToInt32(_timeState))), gameObject.transform.position.y, gameObject.transform.position.z);
-			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x + "\n " +Convert.ToInt32(_timeState));
-			vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos * (1 + (-2 * Convert.ToInt32(_timeState))));
 
+			if (_timeState == TimeState.Past)
+			{
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x - teleportDistace, gameObject.transform.position.y, gameObject.transform.position.z);
+				vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos);
+				_timeState = TimeState.Present;
+			}
+			else
+			{
+				gameObject.transform.position = new Vector3(gameObject.transform.position.x + teleportDistace, gameObject.transform.position.y, gameObject.transform.position.z);
+				vcam.OnTargetObjectWarped(gameObject.transform, gameObject.transform.position + oldXpos);
+				_timeState = TimeState.Past;
+			}
+
+			Debug.Log("Time Travel Forward Initiated + X coordinate is " + gameObject.transform.position.x);
 			_input.timeTravel = false;			
 		}
 
