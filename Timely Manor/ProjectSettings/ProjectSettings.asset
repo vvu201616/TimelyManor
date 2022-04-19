@@ -688,8 +688,19 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     Android: STARTER_ASSETS_PACKAGES_CHECKED
+    CloudRendering: 
+    EmbeddedLinux: 
+    GameCoreXboxOne: 
+    Lumin: 
+    Nintendo Switch: 
+    PS4: 
+    PS5: 
+    Stadia: 
     Standalone: STARTER_ASSETS_PACKAGES_CHECKED
     WebGL: STARTER_ASSETS_PACKAGES_CHECKED
+    Windows Store Apps: 
+    XboxOne: 
+    tvOS: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
