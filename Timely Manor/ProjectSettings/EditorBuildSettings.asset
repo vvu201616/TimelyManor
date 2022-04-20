@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/Will_Test_Present.unity
-    guid: 707acc8dffb72b144bb1ffbe1c965f3d
+    path: Assets/Scenes/Menu_Test.unity
+    guid: ffd5b0210052f9d419a3da2f9fc5617b
   - enabled: 1
     path: Assets/Scenes/Playground_Will.unity
     guid: 685a5b1f61733694a9645bd83377ea48
