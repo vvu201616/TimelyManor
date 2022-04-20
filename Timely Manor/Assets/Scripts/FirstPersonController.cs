@@ -85,13 +85,16 @@ namespace StarterAssets
 
 		// UI elements
 		public TextMeshProUGUI pressEText;
+		public TextMeshProUGUI pressESCText;
+		private GameObject _openNote;
 
 		// State enums
 		private enum PlayerState
         {
 			Moving,
 			TimeTraveling,
-			Interacting
+			Interacting,
+			Reading
         }
 		private PlayerState _playerState;
 		private enum TimeState
@@ -148,34 +151,22 @@ namespace StarterAssets
 
 			if (_playerState == PlayerState.Interacting)
 			{
-				Cursor.visible = true;
-				Cursor.lockState = CursorLockMode.None;
+				pressESCText.gameObject.SetActive(true);
+				PointAndClick();
+			}
 
-				if (_input.clickInput)
-                {
-					Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-					RaycastHit hit;
-					if (Physics.Raycast(ray, out hit, 100))
-					{
-						Debug.Log(hit.transform.name);
-					}
-					_input.clickInput = false;
-                }
-
+			if (_playerState == PlayerState.Reading)
+			{
 				if (_input.exit)
 				{
-					_mainCamera.GetComponent<CinemachineBrain>().ActiveVirtualCamera.Priority = 1; 
-					followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 10;
-					_playerState = PlayerState.Moving;
 
-					Cursor.visible = false;
+					_playerState = PlayerState.Interacting;
+					_openNote.SendMessage("toggleNoteImg");
 					_input.exit = false;
 				}
 			}
-
-
+			
 			_input.clickInput = false;
-
 		}
 
 		IEnumerator Pause()
@@ -186,9 +177,43 @@ namespace StarterAssets
 
 		private void LateUpdate()
 		{
-			if (_playerState == PlayerState.Moving) // TODO doesnt prevent camera movement outside of move state
+			if (_playerState == PlayerState.Moving)
 			{
 				CameraRotation();
+			}
+		}
+
+		private void PointAndClick()
+		{
+			Cursor.visible = true;
+			Cursor.lockState = CursorLockMode.None;
+
+			if (_input.clickInput)
+			{
+				Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+				RaycastHit hit;
+				if (Physics.Raycast(ray, out hit, 100))
+				{
+					if (hit.transform.gameObject.CompareTag("Note"))
+					{
+						hit.transform.gameObject.SendMessage("toggleNoteImg");
+						_openNote = hit.transform.gameObject;
+						_playerState = PlayerState.Reading;
+					}
+				}
+				_input.clickInput = false;
+			}
+
+			if (_input.exit)
+			{
+				_mainCamera.GetComponent<CinemachineBrain>().ActiveVirtualCamera.Priority = 1;
+				followCamera.GetComponent<CinemachineVirtualCamera>().Priority = 10;
+				_playerState = PlayerState.Moving;
+
+				pressESCText.gameObject.SetActive(false);
+				Cursor.visible = false;
+				Cursor.lockState = CursorLockMode.Locked;
+				_input.exit = false;
 			}
 		}
 

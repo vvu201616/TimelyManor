@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Interact
+  - Note
   layers:
   - Default
   - TransparentFX
